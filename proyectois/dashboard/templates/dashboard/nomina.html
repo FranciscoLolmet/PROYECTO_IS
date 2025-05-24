@@ -1,0 +1,64 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block content %}
+<h2>Listado Detallado de Nómina</h2>
+
+<!-- Filtro por Empleado y Fecha de Pago -->
+<form method="get" class="row g-3 mb-4">
+  <div class="col-auto">
+    <label for="empleado_id_select" class="form-label">Empleado:</label>
+    <select id="empleado_id_select" name="empleado_id" class="form-select" onchange="this.form.submit()">
+      <option value="">--Seleccione--</option>
+      {% for emp in empleados %}
+        <option value="{{ emp.0 }}" {% if emp.0|stringformat:"s" == selected_id %}selected{% endif %}>
+          {{ emp.1 }} {{ emp.2 }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-auto">
+    <label for="fecha_pago" class="form-label">Fecha de Pago:</label>
+    <input type="date" id="fecha_pago" name="fecha_pago" class="form-control" value="{{ request.GET.fecha_pago }}" onchange="this.form.submit()">
+  </div>
+</form>
+
+{% if selected_id %}
+  <!-- Estilos para ajuste de tabla sin scroll horizontal -->
+  <style>
+    .fixed-table { table-layout: fixed; }
+    .fixed-table th, .fixed-table td { word-wrap: break-word; white-space: normal; }
+  </style>
+
+  <div class="table-responsive">
+    <table class="table table-sm small fixed-table">
+      <thead class="table-dark">
+        <tr>
+          <th style="width:3%">ID</th><th style="width:5%">Emp ID</th><th style="width:10%">Nombre</th>
+          <th style="width:8%">DPI/CUI</th><th style="width:7%">Código</th><th style="width:8%">Cargo</th>
+          <th style="width:6%">Periodo</th><th style="width:7%">Salario Base</th><th style="width:6%">Bonif Inc.</th>
+          <th style="width:6%">Horas Ext.</th><th style="width:7%">Monto Horas</th><th style="width:7%">Aguinaldo</th>
+          <th style="width:7%">Bono 14</th><th style="width:7%">Comisiones</th><th style="width:7%">Viáticos</th>
+          <th style="width:7%">Otros Ben.</th><th style="width:7%">Total Perc.</th><th style="width:6%">IGSS</th>
+          <th style="width:6%">IRTRA</th><th style="width:6%">ISR</th><th style="width:6%">Préstamos</th>
+          <th style="width:7%">Otras Ded.</th><th style="width:7%">Total Ded.</th><th style="width:7%">Neto</th>
+          <th style="width:8%">Fecha Pago</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for n in nominas %}
+        <tr>
+          <td>{{ n.0 }}</td><td>{{ n.1 }}</td><td>{{ n.2 }}</td><td>{{ n.3 }}</td><td>{{ n.4 }}</td><td>{{ n.5 }}</td>
+          <td>{{ n.6 }}</td><td>{{ n.7 }}</td><td>{{ n.8 }}</td><td>{{ n.9 }}</td><td>{{ n.10 }}</td><td>{{ n.11 }}</td>
+          <td>{{ n.12 }}</td><td>{{ n.13 }}</td><td>{{ n.14 }}</td><td>{{ n.15 }}</td><td>{{ n.16 }}</td>
+          <td>{{ n.17 }}</td><td>{{ n.18 }}</td><td>{{ n.19 }}</td><td>{{ n.20 }}</td><td>{{ n.21 }}</td>
+          <td>{{ n.22 }}</td><td>{{ n.23 }}</td><td>{{ n.24 }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <p class="text-muted">Seleccione un empleado para ver los registros de nómina.</p>
+{% endif %}
+
+{% endblock %}

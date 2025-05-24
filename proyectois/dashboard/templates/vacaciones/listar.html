@@ -1,0 +1,33 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% block content %}
+<div class="container my-4">
+  <h2 class="mb-4">Histórico de Vacaciones</h2>
+  <p><a href="{% url 'vacaciones:registrar_vacacion' %}" class="btn btn-primary">+ Registrar Vacaciones</a></p>
+  <div class="table-responsive">
+    <table class="table table-striped table-hover table-bordered align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>Empleado</th>
+          <th>Fecha Inicio</th>
+          <th>Fecha Fin</th>
+          <th>Días Disfrutados</th>
+          <th>Período</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for v in vacaciones %}
+        <tr>
+          <td>{{ v.0 }}</td>
+          <td>{{ v.2 }}</td>  <!-- nombre completo -->
+          <td>{{ v.3 }}</td>
+          <td>{{ v.4 }}</td>
+          <td>{{ v.5 }}</td>
+          <td>{{ v.6 }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

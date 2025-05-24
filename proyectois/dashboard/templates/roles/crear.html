@@ -1,0 +1,18 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% block content %}
+<div class="container my-4" style="max-width: 600px;">
+  <h2>Crear Nuevo Rol</h2>
+  <form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label class="form-label">Nombre</label>
+      <input type="text" name="nombre" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Descripción</label>
+      <textarea name="descripcion" class="form-control"></textarea>
+    </div>
+    <button type="submit" class="btn btn-success">Guardar Rol</button>
+  </form>
+</div>
+{% endblock %}

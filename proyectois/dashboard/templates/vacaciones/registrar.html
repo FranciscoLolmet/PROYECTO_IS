@@ -1,0 +1,34 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% block content %}
+<div class="container my-4" style="max-width:600px;">
+  <h2 class="mb-4">Registrar Vacaciones</h2>
+  <form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="empleado_id" class="form-label">Empleado</label>
+      <select id="empleado_id" name="empleado_id" class="form-select" required>
+        {% for emp in empleados %}
+          <option value="{{ emp.0 }}">{{ emp.1 }} {{ emp.2 }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="fecha_inicio" class="form-label">Fecha de Inicio</label>
+      <input type="date" id="fecha_inicio" name="fecha_inicio" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label for="fecha_fin" class="form-label">Fecha de Fin</label>
+      <input type="date" id="fecha_fin" name="fecha_fin" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label for="dias_disfrutados" class="form-label">Días Disfrutados</label>
+      <input type="number" id="dias_disfrutados" name="dias_disfrutados" class="form-control" min="1" required>
+    </div>
+    <div class="mb-3">
+      <label for="periodo" class="form-label">Período</label>
+      <input type="text" id="periodo" name="periodo" class="form-control" placeholder="Ej. 2024-2025" required>
+    </div>
+    <button type="submit" class="btn btn-success w-100">Guardar Vacaciones</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% block content %}
+<div class="container my-4" style="max-width: 600px;">
+  <h2>Asignar Rol a Usuario</h2>
+  <form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label class="form-label">Usuario</label>
+      <select name="usuario_id" class="form-select">
+        {% for u in usuarios %}
+          <option value="{{ u.0 }}">{{ u.1 }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Rol</label>
+      <select name="rol_id" class="form-select">
+        {% for r in roles %}
+          <option value="{{ r.0 }}">{{ r.1 }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button type="submit" class="btn btn-success">Asignar</button>
+  </form>
+</div>
+{% endblock %}

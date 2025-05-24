@@ -1,0 +1,35 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block content %}
+  <h2>Recursos Humanos - Empleados</h2>
+  <p><a href="{% url 'alta_empleado' %}">+ Nuevo Empleado</a></p>
+  <table border="1" cellpadding="4" cellspacing="0">
+    <thead>
+      <tr>
+        <th>ID</th><th>Nombre</th><th>Apellido</th>
+        <th>DPI</th><th>Codigo Empleado</th><th>Cargo</th><th>Salario (Q)</th><th>Estado</th><th>Fecha Ingreso</th><th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for e in empleados %}
+      <tr>
+        <td>{{ e.0 }}</td>
+        <td>{{ e.1 }}</td>
+        <td>{{ e.2 }}</td>
+        <td>{{ e.3 }}</td>
+        <td>{{ e.4 }}</td>
+        <td>{{ e.5 }}</td>
+        <td>{{ e.6 }}</td>
+        <td>{{ e.7 }}</td>
+        <td>{{ e.8 }}</td>
+        <td>
+          <a href="{% url 'baja_empleado' e.0 %}" 
+             onclick="return confirm('¿Eliminar al empleado {{ e.1 }} {{ e.2 }}?');">
+            Eliminar
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

@@ -1,0 +1,22 @@
+<!-- dashboard/templates/dashboard/indicadores.html -->
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block content %}
+<h2>Indicadores de Productividad</h2>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Indicador</th>
+        <th>Valor</th>
+        <th>Fecha Registro</th>
+    </tr>
+    {% for ind in indicadores %}
+    <tr>
+        <td>{{ ind.0 }}</td>
+        <td>{{ ind.1 }}</td>
+        <td>{{ ind.2 }}</td>
+        <td>{{ ind.3 }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

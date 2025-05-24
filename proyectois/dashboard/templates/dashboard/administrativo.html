@@ -1,0 +1,22 @@
+<!-- dashboard/templates/dashboard/administrativo.html -->
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block content %}
+<h2>Módulo Administrativo</h2>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Nombre del Módulo</th>
+        <th>Configuración</th>
+        <th>Fecha Actualización</th>
+    </tr>
+    {% for admin in administrativo %}
+    <tr>
+        <td>{{ admin.0 }}</td>
+        <td>{{ admin.1 }}</td>
+        <td>{{ admin.2 }}</td>
+        <td>{{ admin.3 }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

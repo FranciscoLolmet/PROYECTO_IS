@@ -1,0 +1,22 @@
+<!-- dashboard/templates/dashboard/reportes.html -->
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block content %}
+<h2>Reportes</h2>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Título</th>
+        <th>Descripción</th>
+        <th>Fecha Generación</th>
+    </tr>
+    {% for rep in reportes %}
+    <tr>
+        <td>{{ rep.0 }}</td>
+        <td>{{ rep.1 }}</td>
+        <td>{{ rep.2 }}</td>
+        <td>{{ rep.3 }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

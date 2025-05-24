@@ -1,0 +1,20 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% block content %}
+<div class="container my-4">
+  <h2>Roles de Usuario</h2>
+  <p><a href="{% url 'roles:crear_rol' %}" class="btn btn-primary">+ Crear Rol</a>
+     <a href="{% url 'roles:asignar_rol' %}" class="btn btn-secondary">Asignar Rol</a></p>
+  <table class="table table-striped">
+    <thead><tr><th>ID</th><th>Nombre</th><th>Descripción</th></tr></thead>
+    <tbody>
+    {% for r in roles %}
+      <tr>
+        <td>{{ r.0 }}</td>
+        <td>{{ r.1 }}</td>
+        <td>{{ r.2 }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

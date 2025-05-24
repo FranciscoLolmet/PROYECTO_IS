@@ -1,0 +1,59 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% block content %}
+<div class="container my-4" style="max-width:600px;">
+  <h2>Generar Liquidación</h2>
+  
+  {% if messages %}
+  <div class="mb-3">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  
+  <form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label class="form-label">Empleado</label>
+      <select name="empleado_id" class="form-select" required>
+        <option value="">--Seleccione--</option>
+        {% for emp in empleados %}
+        <option value="{{ emp.0 }}" 
+                {% if request.POST.empleado_id == emp.0|stringformat:"s" %}selected{% endif %}>
+          {{ emp.1 }} {{ emp.2 }}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+    
+    <div class="mb-3">
+      <label class="form-label">Fecha de Baja</label>
+      <input type="date" name="fecha_baja" class="form-control" required
+             max="{% now 'Y-m-d' %}"
+             value="{{ request.POST.fecha_baja|default:'' }}">
+    </div>
+    
+    <div class="mb-3">
+      <label class="form-label">Causa de Terminación</label>
+      <select name="causa" class="form-select" required>
+        <option value="renuncia" {% if request.POST.causa == 'renuncia' %}selected{% endif %}>Renuncia Voluntaria</option>
+        <option value="despido_justificado" {% if request.POST.causa == 'despido_justificado' %}selected{% endif %}>Despido Justificado</option>
+        <option value="despido_injustificado" {% if request.POST.causa == 'despido_injustificado' %}selected{% endif %}>Despido Injustificado</option>
+      </select>
+    </div>
+    
+    <div class="mb-3">
+      <label class="form-label">Años a considerar para vacaciones acumuladas</label>
+      <input type="number" name="anos_historico" class="form-control" 
+             value="{{ request.POST.anos_historico|default:'5' }}" 
+             min="1" max="10" required>
+      <div class="form-text">Máximo 10 años de histórico</div>
+    </div>
+    
+    <button type="submit" class="btn btn-success w-100">Generar</button>
+  </form>
+</div>
+{% endblock %}

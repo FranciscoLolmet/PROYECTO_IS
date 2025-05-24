@@ -1,0 +1,241 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block content %}
+  <h2>Registrar Nómina</h2>
+
+  {% if messages %}
+    <ul>
+      {% for msg in messages %}
+        <li style="color: green;">{{ msg }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <!-- Seleccionar Empleado -->
+  <form method="get" style="margin-bottom: 1em;">
+    <label for="empleado_id_select">Empleado:</label>
+    <select id="empleado_id_select" name="empleado_id" onchange="this.form.submit()">
+      <option value="">--Seleccione--</option>
+      {% for emp in empleados %}
+        <option value="{{ emp.0 }}" {% if emp.0|stringformat:"s" == selected_id %}selected{% endif %}>
+          {{ emp.1 }} {{ emp.2 }}
+        </option>
+      {% endfor %}
+    </select>
+  </form>
+
+  {% if selected_id %}
+  <form method="post" id="nominaForm">
+    {% csrf_token %}
+    <input type="hidden" name="empleado_id" value="{{ selected_id }}">
+
+    <fieldset>
+      <legend>Datos del Empleado</legend>
+      <p>
+        <label>Nombre Completo:
+          <input type="text" value="{{ nombre_completo }}" readonly>
+        </label>
+      </p>
+      <p>
+        <label>DPI/CUI:
+          <input type="text" value="{{ dpi }}" readonly>
+        </label>
+      </p>
+      <p>
+        <label>Código Empleado:
+          <input type="text" value="{{ codigo_empleado }}" readonly>
+        </label>
+      </p>
+      <p>
+        <label>Cargo:
+          <input type="text" value="{{ cargo }}" readonly>
+        </label>
+      </p>
+      <p>
+        <label>Salario Mensual (Q):
+          <input type="text" id="salario_mensual" value="{{ salario }}" readonly>
+        </label>
+      </p>
+      </fieldset>
+
+    <fieldset>
+      <legend>Percepciones Variables</legend>
+      <p>
+        <label>Periodo:
+          <select id="periodo" name="periodo" required>
+            <option value="semanal">Semanal</option>
+            <option value="quincenal">Quincenal</option>
+            <option value="mensual">Mensual</option>
+          </select>
+        </label>
+      </p>
+      <p>
+        <p>
+            <label>Bono Incentivo (Q):
+              <input type="number" step="0.01" name="bono_incentivo" value="0">
+            </label>
+          </p>
+      <p>
+        <label>Horas Extras (Q):
+          <input type="number" step="0.01" name="monto_horas_extras" value="0">
+        </label>
+      </p>
+      <p>
+        <label>Comisiones (Q):
+          <input type="number" step="0.01" name="comisiones" value="0">
+        </label>
+      </p>
+      <p>
+        <label>Viáticos (Q):
+          <input type="number" step="0.01" name="viaticos" value="0">
+        </label>
+      </p>
+      <p>
+        <label>Otros Beneficios (Q):
+          <input type="number" step="0.01" name="otros_beneficios" value="0">
+        </label>
+      </p>
+      <p>
+        <label>Préstamos/Anticipos (Q):
+          <input type="number" step="0.01" name="prestamos" value="0">
+        </label>
+      </p>
+      <p>
+        <label>Otras Deducciones (Q):
+          <input type="number" step="0.01" name="otras_deducciones" value="0">
+        </label>
+      </p>
+      <p>
+        <label>Fecha de Pago:
+          <input type="date" name="fecha_pago" required>
+        </label>
+      </p>
+    </fieldset>
+
+    <fieldset>
+      <legend>Bonos Opcionales</legend>
+      <p>
+        <label>
+          <input type="checkbox" id="check_aguinaldo" name="include_aguinaldo" checked>
+          Incluir Aguinaldo
+        </label>
+      </p>
+      <p>
+        <label>
+          <input type="checkbox" id="check_bono14" name="include_bono14" checked>
+          Incluir Bonificación Incentivo (Bono 14)
+        </label>
+      </p>
+    </fieldset>
+
+    <fieldset>
+      <legend>Cálculos Automáticos</legend>
+      <p>
+        <label>Salario Base (Q):
+          <input type="text" id="salario_base" readonly>
+        </label>
+      </p>
+      <p>
+        <label>IGSS (4.83%) (Q):
+          <input type="text" id="igss_calc" readonly>
+        </label>
+      </p>
+      <p>
+        <label>IRTRA (1%) (Q):
+          <input type="text" id="irtra_calc" readonly>
+        </label>
+      </p>
+      <p>
+        <label>ISR (Q):
+          <input type="text" id="isr_calc" readonly>
+        </label>
+      </p>
+      <p>
+        <label>Aguinaldo (Q):
+          <input type="text" id="aguinaldo_calc" readonly>
+        </label>
+      </p>
+      <p>
+        <label>Bono 14 (Q):
+          <input type="text" id="bono14_calc" readonly>
+        </label>
+      </p>
+      <p>
+        <label>Total Percepciones (Q):
+          <input type="text" id="total_percepciones" readonly>
+        </label>
+      </p>
+      <p>
+        <label>Total Deducciones (Q):
+          <input type="text" id="total_deducciones" readonly>
+        </label>
+      </p>
+      <p>
+        <label>Salario Neto (Q):
+          <input type="text" id="salario_neto_calc" readonly>
+        </label>
+      </p>
+    </fieldset>
+
+    <button type="submit">Registrar Nómina</button>
+  </form>
+
+  <script>
+    function round2(v) { return Math.round(v * 100) / 100; }
+    function calculate() {
+      // Valores base
+      var salarioMensual = parseFloat(document.getElementById('salario_mensual').value) || 0;
+      var periodo = document.getElementById('periodo').value;
+      var salarioBase = 0;
+      var bono_incentivo = parseFloat(document.querySelector('input[name="bono_incentivo"]').value) ||0;
+      if (periodo === 'mensual') salarioBase = salarioMensual;
+      else if (periodo === 'quincenal') salarioBase = salarioMensual / 2;
+      else salarioBase = (salarioMensual * 12) / 52;
+      salarioBase = round2(salarioBase);
+      document.getElementById('salario_base').value = salarioBase;
+     //bonificacion
+
+
+
+      // Deducciones
+      var igss = round2((salarioBase  + bono_incentivo) * 0.0483);
+      var irtra = round2(salarioBase * 0.01);
+      var isr = salarioBase > 4000 ? round2((salarioBase - 4000) * 0.05) : 0;
+      document.getElementById('igss_calc').value = igss;
+      document.getElementById('irtra_calc').value = irtra;
+      document.getElementById('isr_calc').value = isr;
+
+      // Bonos opcionales
+      var bono14 = document.getElementById('check_bono14').checked ? salarioMensual : 0;
+      var aguinaldo = document.getElementById('check_aguinaldo').checked ? salarioMensual : 0;
+      document.getElementById('bono14_calc').value = bono14;
+      document.getElementById('aguinaldo_calc').value = aguinaldo;
+
+      // Valores variables adicionales
+      var horas = parseFloat(document.querySelector('input[name="monto_horas_extras"]').value) || 0;
+      var comisiones = parseFloat(document.querySelector('input[name="comisiones"]').value) || 0;
+      var viaticos = parseFloat(document.querySelector('input[name="viaticos"]').value) || 0;
+      var otros = parseFloat(document.querySelector('input[name="otros_beneficios"]').value) || 0;
+      var prestamos = parseFloat(document.querySelector('input[name="prestamos"]').value) || 0;
+      var otrasDed = parseFloat(document.querySelector('input[name="otras_deducciones"]').value) || 0;
+
+      // Totales
+      var totalPerc = round2(salarioBase + horas + bono14 + aguinaldo + comisiones + viaticos + otros +bono_incentivo);
+      var totalDed = round2(igss + irtra + isr + prestamos + otrasDed);
+      var neto = round2(totalPerc - totalDed);
+
+      document.getElementById('total_percepciones').value = totalPerc;
+      document.getElementById('total_deducciones').value = totalDed;
+      document.getElementById('salario_neto_calc').value = neto;
+    }
+
+    document.getElementById('periodo').addEventListener('change', calculate);
+    document.getElementById('check_bono14').addEventListener('change', calculate);
+    document.getElementById('check_aguinaldo').addEventListener('change', calculate);
+    ['monto_horas_extras','comisiones','viaticos','otros_beneficios','prestamos','otras_deducciones'].forEach(function(name) {
+      document.querySelector('input[name="' + name + '"]').addEventListener('input', calculate);
+    });
+    window.addEventListener('load', calculate);
+  </script>
+  {% endif %}
+{% endblock %}
